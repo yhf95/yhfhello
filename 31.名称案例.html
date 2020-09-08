@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>31.名称案例</title>
+    <script src="./lib/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- <input type="text" v-model="firstname" @keyup="getFullname"> +
+        <input type="text" v-model="lastname" @keyup="getFullname"> =
+        <input type="text" v-model="fullname"> -->
+
+        <input type="text" v-model="firstname"> +
+        <input type="text" v-model="lastname"> =
+        <input type="text" v-model="fullname">
+    </div>
+    <script>
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                firstname:'',
+                lastname:'',
+                // fullname:'' //第三种方式
+            },
+            methods: {
+                //第一种方式 使用 keyup
+                // getFullname(){ 
+                //     this.fullname = this.firstname + '-' + this.lastname
+                // }
+            },
+            //第二种方式 使用 watch
+            watch: {//使用这个属性可以监视 data 中指定数据的变化，然后触发这个 watch 中对应的 function 处理函数
+                // firstname:function(){
+                //     // console.log('监听到了 firstname 的变化')
+                //     this.fullname = this.firstname + '-' + this.lastname
+                // },
+                // 'lastname':function(){// 可加'',可不加，如果中间有 - 就一定要加''
+                //     this.fullname = this.firstname + '-' + this.lastname
+                // }
+
+                // firstname:function(newVal,oldVal){
+                //     // console.log('监听到了 firstname 的变化')
+                //     this.fullname = newVal + '-' + this.lastname
+                // },
+                // 'lastname':function(newVal){// 可加'',可不加，如果中间有 - 就一定要加''
+                //     this.fullname = this.firstname + '-' + newVal
+                // }
+            },
+            //第三种方式 使用 computed
+            computed: {//可以定义一些属性，叫做【计算属性】，其本质就是一个方法，只不过使用时，是把他们的名称直接当作属性使用，而不是当作方法去调用
+                'fullname':function(){ //注意：计算属性在引用时，不要加（），直接当作普通属性去使用。只要计算属性，这个 function 内部所用的 data 中的任何数据发送了变化，就会重新计算这个 计算属性的值
+                    return this.firstname + '-' + this.lastname
+                }
+            }
+        })
+    </script>
+</body>
+</html>

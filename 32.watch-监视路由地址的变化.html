@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>27.路由-路由的基本使用</title>
+    <script src="./lib/vue.js"></script>
+    <!-- 1.安装vue-router 路由模块 -->
+    <script src="./lib/vue-router.js"></script>
+    <style>
+        .router-link-active,.myactive{
+            color:white;
+            font-weight: bolder;
+            font-style: italic;
+            font-size: 20px;
+            text-decoration: underline;
+            background-color: black;
+        }
+
+        .v-enter,
+        .v-leave-to{
+            opacity: 0;
+            transform: translateX(140px);
+        }
+        .v-enter-active,
+        .v-leave.active{
+            transition: all 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- <a href="#/login">登录</a>
+        <a href="#/register">注册</a> -->
+
+        <!-- router-link 默认渲染一个 a 标签 -->
+        <!-- 通过 tag 可以将 router-link 设置成别的标签，但是还是会有点击的事件 -->
+        <router-link to="/login" tag="span">登录</router-link>
+        <router-link to="/register">注册</router-link>
+        <!-- 这是 vue-router 提供的元素，专门用来当作占位符的，将来 路由规则匹配到的组件，就会展示到 router-view 中 -->
+        <transition mode="out-in">
+            <router-view></router-view>
+        </transition>
+    </div>
+    <script>
+        //组件模版对象
+        var login = {
+            template:'<h1>登录组件</h1>'
+        }
+        var register = {
+            template:'<h1>注册组件</h1>'
+        }
+
+        /*Vue.component('login',{//此时的login 就是组件的引用名称
+            template:'<h1>登录组件</h1>'
+        })*/
+
+
+        // 2. 创建一个路由对象
+        // 在 new 路由对象时可以为 构造函数传递一个配置对象
+        var routerObj = new VueRouter({
+            routes:[//路由匹配规则
+                //每个路由规则都是一个对象 每个路由对象 都有两个属性：
+                //属性1 path 表示监听的路由地址
+                //属性2 component 表示 如果路由由前面匹配到的 path 则展示component 属性对应的组件
+                //注意： component 属性值必须是组件的模版对象，不能是组件的引用名称
+                // { path:'/', component:login},//此时可以设置根路径也默认指定为login组件，但是不推荐
+                { path:'/', redirect:'/login'},
+                { path:'/login', component:login},
+                { path:'/register', component:register}
+            ],
+            linkActiveClass:'myactive'
+        })
+
+        var vm = new Vue({
+            el:'#app',
+            data:{},
+            methods: {},
+            router:routerObj, //将路由规则对象，注册到 vm 实例上 用来监听 URL 地址变化，展示对应的组件
+            watch:{
+                '$route.path':function(newVal,oldVal){
+                    console.log(newVal + ' ---- ' + oldVal)
+                }
+            }
+        })
+    </script>
+</body>
+</html>

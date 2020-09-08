@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13.基础过滤器</title>
+    <script src="./lib/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <p> {{ msg | msgFormat }} </p>
+        <p> {{ msg | msgFormat2('老师','123') }} </p>
+    </div>
+
+    <script>
+        
+        Vue.filter('msgFormat', function(msg){
+            //此时只能改变第一个世界
+            //return msg.replace('世界','学生')
+
+            //字符串的 replace 方法，第一个参数，除了可写一个 字符串外，还可以定义一个正则， g表示全局
+            return msg.replace(/世界/g,'学生')
+        })
+
+        Vue.filter('msgFormat2', function(msg,arg,arg2){
+            //此时只能改变第一个世界
+            //return msg.replace('世界','学生')
+
+            //字符串的 replace 方法，第一个参数，除了可写一个 字符串外，还可以定义一个正则， g表示全局
+            return msg.replace(/世界/g,arg + arg2)
+        })
+        var vm = new Vue({
+            el: '#app',
+            data:{
+                msg: '你好，世界！你怎么样，世界？'
+            },
+            methods:{}
+        })
+    </script>
+</body>
+</html>

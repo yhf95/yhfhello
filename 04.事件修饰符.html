@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.事件修饰符</title>
+    <script src="./lib/vue.js"></script>
+    <style>
+        .inner{
+            height: 150px;
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="inner" @click.self = "divHandler">
+            <!-- 使用 .stop 阻止冒泡 ，否则点击button按钮，会先触发btnhandler事件，接着触发divHandler事件 -->
+            <input type="button" value="点击" @click = "btnHandler">
+        </div>
+        <!-- 可以阻止其跳转页面 -->
+        <a href="https://www.baidu.com" @click.prevent.once = "linkClick">有问题，百度一下就知道</a>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data:{},
+            methods:{
+                divHandler(){
+                    console.log('inner div')
+                },
+                btnHandler(){
+                    console.log('btn')
+                },
+                linkClick(){
+                    console.log("链接")
+                }
+            }
+        });
+    </script>
+</body>
+</html>

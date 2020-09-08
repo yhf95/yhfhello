@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>29.路由-路由的嵌套</title>
+    <script src="./lib/vue.js"></script>
+    <script src="./lib/vue-router.js"></script>
+</head>
+<body>
+    <div id="app">
+        <router-link to="/account">Account</router-link>
+        <router-view></router-view>
+    </div>
+    <template id="tmpl">
+        <div>
+            <h1>这是 Account 组件</h1>
+            <router-link to="/login">登录</router-link>
+            <router-link to="/account/register">注册</router-link>
+            <router-view></router-view>
+        </div>
+    </template>
+    <script>
+        var account = {
+            template: '#tmpl'
+        }
+        var login = {
+            template:'<h3>登录组件</h3>'
+        }
+
+        var register = {
+            template:'<h3>注册组件</h3>'
+        }
+
+        var router = new VueRouter({
+            routes:[
+                {
+                    path:'/account', 
+                    component: account,
+                    children:[//子路由
+                        //注意 path 里面的内容不要加 /，像 login 一样，上面login 的router-link 也要改动，虽然可以运行，但是不能显示出/account，所以最好用 register 这样的方法。
+                        {path:'/login', component: login},
+                        {path:'register', component: register}
+                    ]
+                },
+                // 不能这样写，这样写表示login 和 register 与 account 平级
+                // {path:'/account/login', component: login},
+                // {path:'/account/register', component: register}
+            ]
+        })
+        var vm = new Vue({
+            el:'#app',
+            data:{},
+            methods: {},
+            router
+        })
+    </script>
+</body>
+</html>

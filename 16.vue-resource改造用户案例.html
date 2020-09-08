@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>16.vue-resource改造用户案例</title>
+    <script src="./lib/vue.js"></script>
+    <script src="./lib/vue-resource.js"></script>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">添加用户</h3>
+        </div>
+        <div class="panel-body form-inline">
+          <label>
+            Name:
+            <input type="text" v-model="name" class="form-control" />
+          </label>
+          <input
+            type="button"
+            value="添加"
+            @click="add"
+            class="btn btn-primary"
+          />
+        </div>
+      </div>
+
+      <table class="table table-bordered table-hover table-striped">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Operation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in list" :key="item.id">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.username}}</td>
+            <td>
+              <a href="" @click.prevent="del(item.id)">删除</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      //设置根
+      Vue.http.options.root = 'https://jsonplaceholder.typicode.com/';
+      //全局启用 emulateJSON 选项
+      Vue.http.options.emulateJSON = true;
+      var vm = new Vue({
+        el: "#app",
+        data: {
+          name: "",
+          list: [
+            { id: 1, name: "奔驰", ctime: new Date() },
+            { id: 2, name: "宝马", ctime: new Date() },
+          ],
+        },
+        created() {
+          this.getAllList();
+        },
+        methods: {
+
+          getAllList() {
+            //分析：
+            //1. 由于导入来Vue-resource包，可以直接通过 this.$http发起数据请求
+            //2. 根据接口API文档，获取列表时应发起一个 get 请求
+            //3. this.$http.get('url').then(function(result){})
+            //4. 通过 then 指定回调函数后，在回调函数中可以拿到数据服务器返回的 result
+            this.$http
+              .get("users")
+              .then((result) => {
+                this.list = result.body;
+                // if(result.status === 0){
+                //     this.list = result.message
+                // }else{
+                //     alert("获取数据失败！")
+                // }
+              });
+          },
+          add() {
+            //分析
+            //1. 经过查看 数据API接口 要发送一个 Post 请求 ，this.$http.post
+            //2. this.$http.post() 中接收三个参数
+            // 2.1 参数1 要请求的URL地址
+            // 2.2 参数2 要提交给服务器的数据，要以对象形式提交服务器 { name : this.name}
+            // 2.3 参数3 一个配置对象，要以哪种表单数据提交过去， {emulateJSON:true} ,以普通表单格式，将数据提交给服务器 application/x-www-from-urlencoded
+            //3. 在 post 方法中，使用 .then 来设置成功的回调函数，如果要拿到成功的结果，需要 result.body
+
+            this.$http
+              .post(
+                "posts",
+                { name: this.name },
+                { emulateJSON: true }
+              )
+              .then((result) => {
+                this.getAllList();
+              });
+          },
+          del(id) {
+            this.$http.get('posts/1' + id).then(result => {
+              this.getAllList();
+            })
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07.vue中样式-class</title>
+    <script src="./lib/vue.js"></script>
+    <style>
+        .red{
+            color: red;
+        }
+        .thin{
+            font-weight: 200;
+        }
+        .italic{
+            font-style: italic;
+        }
+        .active{
+            /* 设置每个字符之间的间距，还有一个word-spacing只对英文单词有作用，对中文没作用 */
+            letter-spacing: 0.5em; 
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1 :class="['red','italic',flag?'active':'']">这是一个很大的H1！</h1>
+        <h1 :class="classObj">这是一个很大的H1！</h1>
+    </div>
+    <script>
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                flag:false,
+                classObj:{red:true,italic:true,active:true,thin:true}
+            },
+            methods:{}
+        })
+    </script>
+</body>
+</html>

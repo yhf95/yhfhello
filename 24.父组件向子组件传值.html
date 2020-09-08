@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24.父组件向子组件传值</title>
+    <script src="./lib/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 父组件可以在引用子组件的时候 通过属性绑定(v-bind)的形式,把需要传递给 子组件 的数据，传递到子组件内部，供子组件使用 -->
+        <com1 v-bind:parentmsg="msg"></com1>
+        <hr>
+        <!-- 父组件向子组件传递方法 使用的时候 事件绑定机制 v-on 当我们自定义了一个事件属性之后，那么子组件就能通过某些方式来调用 传递进去的这种方法了 -->
+        <com2 v-on:func="show"></com2>
+    </div>
+
+    <template id="tmpl">
+        <div>
+            <h1>这是一个子组件</h1>
+            <input type="button" value="点击" @click="myclick">
+        </div>
+    </template>
+    <script>
+        //定义一个字面量类型的 组件模版对象
+        var com2 = {
+            template:'#tmpl', //通过指定一个 Id，表示要加载 指定Id的templata 元素的内容 当作组件的HTML内容
+            data () {
+                return {
+                    somemsg:{name:'小头儿子', age:6}
+                }
+            },
+            methods: {
+                // 当点击子组件按钮时 如何拿到 父组件传递过来的 func 方法，并调用这个方法
+                //emit 原意： 触发 调用 发射的意思
+                myclick(){
+                    this.$emit('func',this.somemsg)//从第二个参数开始都可以进行传参
+                }
+            }
+        }
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                msg:'123 父组件的数据',
+            },
+            methods: {
+                show(data){
+                    this.msg = data
+                    console.log(data)
+                }
+            },
+            components: {
+                com1:{
+                    data(){
+                        return { title:'123'}
+                    },
+                    // 子组件 默认无法访问到 父组件中的 data 上的数据 和 methods 中的方法
+                    template:'<h1 @click="change1">这是一个子组件 --- {{parentmsg}} ---- 私有 data数据 {{title}}</h1>',
+                    // 注意：组件中的所有 props 中的数据 都是通过父组件传递给子组件的
+                    props:['parentmsg'],//把父组件传递过来的 属性 先在 props 数组中进行定义
+                    methods: {
+                        change(){
+                        this.parentmsg = '被修改了'
+                        },
+                        change1(){
+                        this.title = '被修改了'
+                        }
+                    },
+                },
+                com2
+            }
+        })
+    </script>
+</body>
+</html>

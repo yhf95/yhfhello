@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>30.路由-命名视图</title>
+    <script src="./lib/vue.js"></script>
+    <script src="./lib/vue-router.js"></script>
+    <style>
+        html,body{
+            margin: 0;
+            padding: 0;
+        }
+        .header{
+            background-color: aqua;
+            height: 80px;
+        }
+        h1{
+            margin: 0;
+            padding:0;
+            font-size: 16px;
+        }
+        .container{
+            display: flex;
+            height: 800px;
+        }
+        .left{
+            background-color: lightgoldenrodyellow;
+            flex: 3;
+        }
+        .main{
+            background-color: coral;
+            flex: 7;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <router-view></router-view>
+      <div class="container">
+        <router-view name="left"></router-view>
+        <router-view name="main"></router-view>
+      </div>
+    </div>
+    <script>
+      var header = {
+        template: '<h1 class="header">Header头部区域</h1>',
+      };
+      var leftBox = {
+        template: '<h1 class="left">LeftBox侧边拦区域</h1>',
+      };
+      var mainBox = {
+        template: '<h1 class="main">mainBox主体区域</h1>',
+      };
+
+      var router = new VueRouter({
+        routes: [
+          /*// 这种方式不可取，会造成上述三个 router-view 区域里面的内容都是 hearder 组件模版对象
+                {path:'/',component:header},
+                {path:'/left',component:leftBox},
+                {path:'/main',component:mainBox},*/
+
+          {
+            path: "/",
+            components: {
+              'default': header,
+              'left': leftBox,
+              'main': mainBox,
+            },
+          },
+        ],
+      });
+
+      var vm = new Vue({
+        el: "#app",
+        data: {},
+        methods: {},
+        router,
+      });
+    </script>
+  </body>
+</html>
